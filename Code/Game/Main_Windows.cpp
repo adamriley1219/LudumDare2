@@ -31,7 +31,7 @@ constexpr float CLIENT_ASPECT = 2.0f; // We are requesting a 1:1 aspect (square)
 void* g_hWnd = nullptr;							// ...becomes WindowContext::m_windowHandle
 HDC g_displayDeviceContext = nullptr;			// ...becomes WindowContext::m_displayContext
 HGLRC g_openGLRenderingContext = nullptr;		// ...becomes RenderContext::m_apiRenderingContext
-const char* APP_NAME = "Protogame3D";					// ...becomes ???
+const char* APP_NAME = "LudumDare2";					// ...becomes ???
 
 														//-----------------------------------------------------------------------------------------------
 														// Handles Windows (Win32) messages/events; i.e. the OS is trying to tell us something happened.
