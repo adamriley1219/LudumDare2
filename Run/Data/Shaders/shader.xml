@@ -1,0 +1,23 @@
+
+
+
+
+
+<shader id="default/unlit_transparent">
+
+  <pass src="Data/Shaders/default_unlit.01.hlsl"
+       defines="DEFINE=VALUE;JUST_DEFINED;ETC" >
+    <vert entry="VertexFunction" />
+    <frag entry="FragmentFunction" />
+    <depth
+         write="true"
+         test="lequal" />
+    <blend
+         mode="opaque" />
+    <raster
+         cull="back"
+         front="ccw"
+         fill="solid" />
+  </pass>
+
+</shader>
