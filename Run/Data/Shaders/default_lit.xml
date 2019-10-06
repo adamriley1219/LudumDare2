@@ -5,7 +5,7 @@
 
 <shader id="default/unlit_transparent">
 
-  <pass src="Data/Shaders/default_unlit.01.hlsl"
+  <pass src="Data/Shaders/dot3_lighting.hlsl"
        defines="DEFINE=VALUE;JUST_DEFINED;ETC" >
     <vert entry="VertexFunction" />
     <frag entry="FragmentFunction" />
@@ -13,7 +13,7 @@
          write="true"
          test="lequal" />
     <blend
-         mode="opaque" />
+         mode="alpha" />
     <raster
          cull="back"
          clockwise="false"

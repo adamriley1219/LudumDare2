@@ -11,9 +11,9 @@
     <frag entry="FragmentFunction" />
     <depth
          write="true"
-         test="lequal" />
+         test="greater" />
     <blend
-         mode="opaque" />
+         mode="alpha" />
     <raster
          cull="back"
          clockwise="false"

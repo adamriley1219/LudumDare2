@@ -5,6 +5,7 @@
 #include "Engine/Core/EventSystem.hpp"
 #include "Game/Game.hpp"
 
+class Clock;
 
 //--------------------------------------------------------------------------
 class App
@@ -14,7 +15,7 @@ public:
 	~App() {};
 	void Startup();
 	void Shutdown();
-	void RunFrame( float timeFrameBeganSec );
+	void RunFrame();
 
 	bool IsQuitting() const { return m_isQuitting; }
 	bool HandleKeyPressed( unsigned char keyCode );
@@ -24,8 +25,12 @@ public:
 
 	static bool QuitEvent( EventArgs& args );
 
-	void TogglePause();
-	float GetGlobleTime() const { return m_time; }
+	bool IsPaused() const;
+	void Unpause();
+	void Pause();	
+
+	Clock* GetGameClock() const;
+
 private:
 	void BeginFrame();
 	void Update( float deltaSeconds );
@@ -34,13 +39,14 @@ private:
 	void EndFrame();
 	void ToggleDebug();
 	void RegisterEvents();
+	
+private:
+	Clock* m_gameClock = nullptr;
 
 private:
 	bool m_isQuitting = false;
-	bool m_isPaused = false;
 	bool m_isSlowMo = false;
 	bool m_isFastMo = false;
-	float m_time = 0;
 	float m_consoleTextHeight = 2.0f;
 
 };

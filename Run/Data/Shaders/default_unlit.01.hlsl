@@ -45,6 +45,9 @@ cbuffer camera_constants : register(b2)
 cbuffer model_constants : register(b3)
 {
    float4x4 MODEL;  // LOCAL_TO_WORLD
+
+   float3 CAM_POS;
+   float pad02;
 }
 
 //--------------------------------------------------------------------------------------

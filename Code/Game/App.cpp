@@ -5,6 +5,7 @@
 #include "Engine/Core/Vertex/Vertex_PCU.hpp"
 #include "Engine/Core/Debug/Log.hpp"
 #include "Engine/Core/Debug/Profiler.hpp"
+#include "Engine/Core/Time/Clock.hpp"
 
 #include "Engine/Renderer/RenderContext.hpp"
 #include "Engine/Renderer/Debug/DebugRenderSystem.hpp"
@@ -53,6 +54,9 @@ void App::Startup()
 	LogSystemStartup( "Data/Log/Log.txt" );
 	ProfilerSystemInit();
 
+	ClockSystemStartup();
+	m_gameClock = new Clock(&Clock::Master);
+
 	g_theEventSystem->Startup();
 	g_theRenderer->Startup();
 	g_theDebugRenderSystem->Startup();
@@ -85,6 +89,7 @@ void App::Shutdown()
 
 	SAFE_DELETE( g_theGame );
 
+	SAFE_DELETE(m_gameClock);
 	SAFE_DELETE( g_theImGUISystem );
 	SAFE_DELETE( g_theAudioSystem );
 	SAFE_DELETE( g_theInputSystem );
@@ -98,31 +103,24 @@ void App::Shutdown()
 /**
 * RunFrame
 */
-void App::RunFrame( float timeFrameBeganSec )
+void App::RunFrame()
 {
-	double timeLastFrameSec = m_time;
-	m_time = timeFrameBeganSec;
-
-	float deltaTime = (float) ( timeFrameBeganSec - timeLastFrameSec );
-
-	deltaTime = Clamp( deltaTime, 0.0f, 0.1f );
-
-	if( m_isPaused )
+	if (m_isSlowMo)
 	{
-		deltaTime = 0.0f;
+		m_gameClock->Dilate(0.1f);
 	}
-	else if( m_isSlowMo )
+	else if (m_isFastMo)
 	{
-		deltaTime *= 0.1f;
+		m_gameClock->Dilate(4.0f);
 	}
-	else if( m_isFastMo )
+	else
 	{
-		deltaTime *= 4.0f;
+		m_gameClock->Dilate(1.0f);
 	}
 
 
 	BeginFrame();
-	Update( deltaTime );
+	Update((float)m_gameClock->GetFrameTime());
 	Render();
 	EndFrame();
 }
@@ -141,13 +139,6 @@ bool App::HandleKeyPressed( unsigned char keyCode )
 	{
 	case 192: // '~' press
 
-		break;
-	case 'P':
-		if(m_isPaused)
-			m_isPaused = false;
-		else
-			m_isPaused = true;
-		return true;
 		break;
 	case 'T':
 		m_isSlowMo = true;
@@ -235,13 +226,32 @@ bool App::QuitEvent( EventArgs& args )
 	return true;
 }
 
+
 //--------------------------------------------------------------------------
 /**
-* HandleKeyPressedTogglePause
+* IsPaused
 */
-void App::TogglePause()
+bool App::IsPaused() const
 {
-	m_isPaused = !m_isPaused;
+	return m_gameClock->IsPaused();
+}
+
+//--------------------------------------------------------------------------
+/**
+* Unpause
+*/
+void App::Unpause()
+{
+	m_gameClock->Resume();
+}
+
+//--------------------------------------------------------------------------
+/**
+* Pause
+*/
+void App::Pause()
+{
+	m_gameClock->Pause();
 }
 
 //--------------------------------------------------------------------------
@@ -250,6 +260,7 @@ void App::TogglePause()
 */
 void App::BeginFrame()
 {
+	ClockSystemBeginFrame();
 	g_theImGUISystem->		BeginFrame();
 	g_theEventSystem->		BeginFrame();
 	g_theRenderer->			BeginFrame();
@@ -385,5 +396,14 @@ void App::ToggleDebug()
 void App::RegisterEvents()
 {
 	g_theEventSystem->SubscribeEventCallbackFunction( "quit", QuitEvent );
+}
+
+//--------------------------------------------------------------------------
+/**
+* GetGameClock
+*/
+Clock* App::GetGameClock() const
+{
+	return m_gameClock;
 }
 

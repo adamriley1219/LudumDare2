@@ -13,11 +13,11 @@
          write="true"
          test="lequal" />
     <blend
-         mode="opaque" />
+         mode="alpha" />
     <raster
          cull="back"
          clockwise="false"
-         wireframe="false" />
+         wireframe="true" />
   </pass>
 
 </shader>

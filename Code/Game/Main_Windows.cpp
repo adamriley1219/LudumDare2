@@ -152,7 +152,7 @@ void RunFrame()
 {
 	RunMessagePump();
 
-	g_theApp->RunFrame( (float) GetCurrentTimeSeconds() );	
+	g_theApp->RunFrame();	
 
 }
 //-----------------------------------------------------------------------------------------------
